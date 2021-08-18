@@ -2,13 +2,22 @@ using UnityEngine;
 
 namespace Robotics.Servo
 {
+    /// <summary>
+    /// Base class for all servo types.
+    /// </summary>
     [DisallowMultipleComponent]
     public abstract class Servo : MonoBehaviour
     {
-        private int _minPulseWidth = 1000;
-        private int _maxPulseWidth = 2000;
-        private int _pulseWidth = 1500;
+        private int _minPulseWidth;
+        private int _maxPulseWidth;
+        private int _pulseWidth;
 
+        // Default values
+        private void Reset() => (_minPulseWidth, _pulseWidth, _maxPulseWidth) = (1000, 1500, 2000);
+
+        /// <summary>
+        /// Gets min and max pulse width values.
+        /// </summary>
         public (int min, int max) PulseWidthRange => (_minPulseWidth, _maxPulseWidth);
 
         /// <summary>
@@ -38,6 +47,14 @@ namespace Robotics.Servo
         /// <returns>Current pulse width in microseconds.</returns>
         public int readMicroseconds() => _pulseWidth;
 
+        /// <summary>
+        /// Updates servo's visual every frame.
+        /// </summary>
         protected abstract void Update();
+
+        /// <summary>
+        /// Updates servo's physics every physics frame.
+        /// </summary>
+        protected abstract void FixedUpdate();
     }
 }
