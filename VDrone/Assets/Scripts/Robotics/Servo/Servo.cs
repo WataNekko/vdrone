@@ -7,8 +7,9 @@ namespace Robotics.Servo
     {
         private int _minPulseWidth = 1000;
         private int _maxPulseWidth = 2000;
-        [SerializeField]
         private int _pulseWidth = 1500;
+
+        public (int min, int max) PulseWidthRange => (_minPulseWidth, _maxPulseWidth);
 
         /// <summary>
         /// Sets min and max pulse width values for writes.
