@@ -1,8 +1,18 @@
 using Robotics.Servo;
 using UnityEngine;
 
-public class Test : MonoBehaviour
+public class Test : TestBase
 {
-    [Range(1000,2300)]
-    public int test;
+    //protected void Reset()
+    //{
+    //    Debug.Log("test");
+    //}
+}
+
+public class TestBase : MonoBehaviour
+{
+    void Reset()
+    {
+        Debug.Log("testbase");
+    }
 }
