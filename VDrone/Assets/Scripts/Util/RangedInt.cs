@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Util
 {
     [System.Serializable]
-    public struct IntInRange
+    public struct RangedInt
     {
         [SerializeField]
         private int _min;
@@ -12,7 +12,9 @@ namespace Util
         [SerializeField]
         private int _value;
 
-        public IntInRange(int value, int min, int max) : this() => (Range, Value) = ((min, max), value);
+        public RangedInt(int value, (int min, int max) range) : this() => (Range, Value) = (range, value);
+
+        public RangedInt(int value, int min, int max) : this(value, (min, max)) { }
 
         public (int min, int max) Range
         {

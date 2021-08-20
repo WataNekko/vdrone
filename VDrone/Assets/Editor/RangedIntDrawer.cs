@@ -4,8 +4,8 @@ using Util;
 
 namespace EditorNS
 {
-    [CustomPropertyDrawer(typeof(IntInRange))]
-    public class IntInRangeDrawer : PropertyDrawer
+    [CustomPropertyDrawer(typeof(RangedInt))]
+    public class RangedIntDrawer : PropertyDrawer
     {
         private SerializedProperty _valueProp;
         private SerializedProperty _minProp;
@@ -43,20 +43,26 @@ namespace EditorNS
             int min = _minProp.intValue;
             int max = _maxProp.intValue;
 
+            // Value slider and foldout arrow
             EditorGUI.IntSlider(position, _valueProp, min, max, label);
             property.isExpanded = EditorGUI.Foldout(position, property.isExpanded, "");
 
             // Draw min and max fields if is expanded
             if (property.isExpanded)
             {
-                position.y += position.height + EditorGUIUtility.standardVerticalSpacing;
+                // Set up layout
                 EditorGUI.indentLevel++;
-                position.width /= 2;
+                EditorGUIUtility.labelWidth = 50;
+                Rect minMaxPos = new Rect(
+                    position.x,
+                    position.y + position.height + EditorGUIUtility.standardVerticalSpacing,
+                    102,
+                    position.height);
 
-                min = EditorGUI.IntField(position, _minProp.displayName, min);
-
-                position.x += position.width;
-                max = EditorGUI.IntField(position, _maxProp.displayName, max);
+                // Draw min max int fields
+                min = EditorGUI.IntField(minMaxPos, _minProp.displayName, min);
+                minMaxPos.x += position.width / 2;
+                max = EditorGUI.IntField(minMaxPos, _maxProp.displayName, max);
 
                 // Update if valid
                 if (min <= max)
@@ -66,8 +72,6 @@ namespace EditorNS
                     // Ensure value stays within new range
                     _valueProp.intValue = Mathf.Clamp(_valueProp.intValue, min, max);
                 }
-
-                EditorGUI.indentLevel--;
             }
         }
     }

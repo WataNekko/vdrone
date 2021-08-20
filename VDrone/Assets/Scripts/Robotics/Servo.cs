@@ -10,11 +10,11 @@ namespace Robotics
     public abstract class Servo : MonoBehaviour
     {
         [SerializeField]
-        private IntInRange _pulseWidth;
+        private RangedInt _pulseWidth;
 
 #if UNITY_EDITOR
-        // Default values
-        protected virtual void Reset() => _pulseWidth = new IntInRange(1500, 1000, 2000);
+        // Default editor values
+        protected virtual void Reset() => _pulseWidth = new RangedInt(value: 1500, range: (1000, 2000));
 #endif
 
         /// <summary>

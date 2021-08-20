@@ -4,8 +4,30 @@ namespace Robotics.Servos
 {
     public class BLDCMotor : Servo
     {
-        public bool _isClockwise;
+        [SerializeField]
+        private bool _isClockwise;
+        [SerializeField]
+        private Transform _rotor;
+        [SerializeField]
         private Rigidbody _rigidbody;
+
+        // rotation direction
+        private int _direction;
+
+        protected override void Reset()
+        {
+            base.Reset();
+            OnValidate();
+
+            _rigidbody = GetComponentInParent<Rigidbody>()
+                ?? gameObject.AddComponent<Rigidbody>();
+
+        }
+
+        private void OnValidate()
+        {
+            _direction = _isClockwise ? 1 : -1;
+        }
 
         protected override void Update()
         {
@@ -13,7 +35,6 @@ namespace Robotics.Servos
 
         protected override void FixedUpdate()
         {
-            //Mathf.Sin(Time.time);
         }
     }
 }
