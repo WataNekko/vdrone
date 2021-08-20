@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Robotics.Servo
+namespace Robotics
 {
     /// <summary>
     /// Base class for all servo types.
@@ -13,7 +13,7 @@ namespace Robotics.Servo
         private int _pulseWidth;
 
         // Default values
-        private void Reset() => (_minPulseWidth, _pulseWidth, _maxPulseWidth) = (1000, 1500, 2000);
+        protected virtual void Reset() => (_minPulseWidth, _pulseWidth, _maxPulseWidth) = (1000, 1500, 2000);
 
         /// <summary>
         /// Gets min and max pulse width values.

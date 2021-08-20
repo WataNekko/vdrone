@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Robotics.Controller
+namespace Robotics
 {
     /// <summary>
     /// Base class for all controllers.

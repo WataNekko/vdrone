@@ -1,18 +1,26 @@
-using Robotics.Servo;
+using System.Collections;
 using UnityEngine;
 
 public class Test : TestBase
 {
-    //protected void Reset()
-    //{
-    //    Debug.Log("test");
-    //}
+    private void Awake()
+    {
+        //Debug.Log("dev");
+        //StartCoroutine(Tst());
+    }
+
+    IEnumerator Tst()
+    {
+        gameObject.AddComponent<Robotics.Servos.BLDCMotor>();
+        yield return new WaitForSeconds(3);
+        gameObject.AddComponent<Robotics.Servos.BLDCMotor>();
+    }
 }
 
 public class TestBase : MonoBehaviour
 {
-    void Reset()
+    private void Start()
     {
-        Debug.Log("testbase");
+        //Debug.Log("base");
     }
 }

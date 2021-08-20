@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Robotics.Servo
+namespace Robotics.Servos
 {
     public class BLDCMotor : Servo
     {
@@ -14,7 +14,7 @@ namespace Robotics.Servo
 
         protected override void FixedUpdate()
         {
-
+            //Mathf.Sin(Time.time);
         }
     }
 }
