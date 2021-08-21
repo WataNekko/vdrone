@@ -72,6 +72,8 @@ namespace EditorNS
                     // Ensure value stays within new range
                     _valueProp.intValue = Mathf.Clamp(_valueProp.intValue, min, max);
                 }
+
+                EditorGUI.indentLevel--;
             }
         }
     }
