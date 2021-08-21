@@ -5,9 +5,7 @@ public class Test : MonoBehaviour
 {
     private void Start()
     {
-        StartCoroutine(T());
     }
-
     private IEnumerator T()
     {
         yield return new WaitForSeconds(1);
@@ -17,5 +15,6 @@ public class Test : MonoBehaviour
 
     private void Reset()
     {
+        Debug.Log(Mathf.InverseLerp(1, 2, 3));
     }
 }

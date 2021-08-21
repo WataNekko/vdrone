@@ -296,6 +296,7 @@ MonoBehaviour:
     _max: 2000
     _value: 1500
   _direction: 1
+  _maxSpeed: 7200
   _rotorRigidbody: {fileID: 0}
   _rotorTransform: {fileID: 8654607493730785424}
   _statorRigidbody: {fileID: 0}
