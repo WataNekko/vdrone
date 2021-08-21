@@ -10,12 +10,8 @@ namespace Robotics
     public abstract class Servo : MonoBehaviour
     {
         [SerializeField]
-        private RangedInt _pulseWidth;
-
-#if UNITY_EDITOR
-        // Default editor values
-        protected virtual void Reset() => _pulseWidth = new RangedInt(value: 1500, range: (1000, 2000));
-#endif
+        [Tooltip("Current pulse width, in microseconds, of this servo.")]
+        private RangedInt _pulseWidth = new RangedInt(value: 1500, range: (1000, 2000));
 
         /// <summary>
         /// Sets min and max pulse width values for writes.
