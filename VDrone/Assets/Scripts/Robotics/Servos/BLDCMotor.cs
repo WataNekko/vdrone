@@ -24,7 +24,7 @@ namespace Robotics.Servos
         [Min(0f)]
         private float _maxSpeed = 7200f; // 0.0698f impulse torque on 0.074 kg rb ~ 7200f deg/s
 
-        [Header("Torque's bodies")]
+        [Header("Force's bodies")]
         [SerializeField]
         [Tooltip("Rigidbody of the rotor to which to apply torque.\n\nIf unspecified, rotation is applied to the Rotor Transform if provided.")]
         private Rigidbody _rotorRigidbody;
@@ -53,6 +53,15 @@ namespace Robotics.Servos
 
         protected override void FixedUpdate()
         {
+            if (_rotorRigidbody != null)
+            {
+
+            }
+
+            if (_statorRigidbody != null)
+            {
+
+            }
         }
     }
 }
