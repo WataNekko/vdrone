@@ -22,7 +22,7 @@ namespace Robotics.Servos
         [SerializeField]
         [Tooltip("Maximum angular speed (degrees/second) at full throttle.")]
         [Min(0f)]
-        private float _maxSpeed = 7200f;
+        private float _maxSpeed = 7200f; // 0.0698f impulse torque on 0.074 kg rb ~ 7200f deg/s
 
         [Header("Torque's bodies")]
         [SerializeField]

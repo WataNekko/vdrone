@@ -3,18 +3,20 @@ using UnityEngine;
 
 public class Test : MonoBehaviour
 {
+    Rigidbody rb;
+
     private void Start()
     {
+        rb = GetComponent<Rigidbody>();
+        rb.maxAngularVelocity = float.PositiveInfinity;
+        rb.AddRelativeTorque(Vector3.up * .0698f,ForceMode.Impulse);
     }
-    private IEnumerator T()
+
+    private void FixedUpdate()
     {
-        yield return new WaitForSeconds(1);
-        //Debug.Log(gameObject.AddComponent<Robotics.Servos.BLDCMotor>());
-        //Debug.Log(gameObject.AddComponent<Robotics.Servos.BLDCMotor>());
     }
 
     private void Reset()
     {
-        Debug.Log(Mathf.InverseLerp(1, 2, 3));
     }
 }
