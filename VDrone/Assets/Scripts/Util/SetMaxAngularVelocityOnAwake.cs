@@ -10,7 +10,7 @@ namespace Util
     public class SetMaxAngularVelocityOnAwake : MonoBehaviour
     {
         [Tooltip("Max angular velocity value to set on awake.")]
-        public float MaxAngularVelocity = float.PositiveInfinity;
+        public float MaxAngularVelocity = Mathf.Infinity;
 
         private void Awake()
         {
