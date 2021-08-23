@@ -11,42 +11,35 @@ namespace Util
     {
         [SerializeField]
         [ReadOnlyInspector]
-        [Tooltip("Calculated mass (kg)")]
+        [Tooltip("Calculated mass (kg) rounded to 4 decimal places.")]
         private float _weight;
         [SerializeField]
         [Tooltip("Text UI on which to display the weight.")]
         private Text _displayText;
 
+        private Dictionary<Collider, float> _registeredWeights = new Dictionary<Collider, float>();
 
-        private Dictionary<Rigidbody, float> _registeredWeights = new Dictionary<Rigidbody, float>();
+        public float Weight => _weight;
 
         private void OnCollisionEnter(Collision collision)
         {
-            var rb = collision.rigidbody;
-            if (rb != null)
-            {
-                // Convert world space to local
-                Vector3 impulseLocal = transform.InverseTransformDirection(collision.impulse);
-                Vector3 gravityLocal = transform.InverseTransformDirection(Physics.gravity);
+            // Convert world space to local
+            Vector3 impulseLocal = transform.InverseTransformDirection(collision.impulse);
+            Vector3 gravityLocal = transform.InverseTransformDirection(Physics.gravity);
 
-                // Calculate weight accordingly
-                float force = -impulseLocal.y / Time.fixedDeltaTime;
-                _registeredWeights[rb] = force / gravityLocal.y;
+            // Calculate weight accordingly
+            float force = -impulseLocal.y / Time.fixedDeltaTime;
+            _registeredWeights[collision.collider] = force / gravityLocal.y;
 
-                UpdateWeight();
-            }
+            UpdateWeight();
         }
 
         private void OnCollisionStay(Collision collision) => OnCollisionEnter(collision);
 
         private void OnCollisionExit(Collision collision)
         {
-            var rb = collision.rigidbody;
-            if (rb != null)
-            {
-                _registeredWeights.Remove(rb);
-                UpdateWeight();
-            }
+            _registeredWeights.Remove(collision.collider);
+            UpdateWeight();
         }
 
         private void UpdateWeight()
@@ -57,6 +50,8 @@ namespace Util
             {
                 totalWeight += weight;
             }
+            // Round to 4 decimal places
+            totalWeight = Mathf.Round(totalWeight * 1e4f) / 1e4f;
 
             _weight = totalWeight;
 

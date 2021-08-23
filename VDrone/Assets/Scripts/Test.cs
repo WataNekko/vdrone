@@ -3,16 +3,16 @@ using UnityEngine;
 public class Test : MonoBehaviour
 {
     Rigidbody rb;
-    public Vector3 Torque;
+    public Vector3 Force;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        rb.maxAngularVelocity = float.PositiveInfinity;
+        rb.maxAngularVelocity = Mathf.Infinity;
     }
 
     private void FixedUpdate()
     {
-        rb.AddRelativeTorque(Torque);
+        rb.AddRelativeForce(Force);
     }
 }
