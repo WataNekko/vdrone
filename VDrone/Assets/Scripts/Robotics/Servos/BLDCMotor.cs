@@ -15,14 +15,14 @@ namespace Robotics.Servos
             CounterClockwise = -1
         }
 
-        [Header("BLDC Motor")]
-        [SerializeField]
-        [Tooltip("Whether the rotation direction is clockwise or counter-clockwise.")]
-        private RotationDirection _direction = RotationDirection.Clockwise;
+        [Header("BLDC Motor's Spec")]
         [SerializeField]
         [Tooltip("Maximum angular speed (degrees/second) at full throttle.")]
         [Min(0f)]
         private float _maxSpeed = 7200f; // 0.0698f impulse torque on 0.074 kg rb ~ 7200f deg/s
+        [SerializeField]
+        [Tooltip("Whether the rotation direction is clockwise or counter-clockwise.")]
+        private RotationDirection _direction = RotationDirection.Clockwise;
 
         [Header("Torque")]
         [SerializeField]
@@ -37,7 +37,7 @@ namespace Robotics.Servos
 
         [Header("Force")]
         [SerializeField]
-        private Vector3 _forceDirection = Vector3.zero;
+        private float _maxForceProduced = 0f;
 
         private float Direction => (float)_direction;
 
