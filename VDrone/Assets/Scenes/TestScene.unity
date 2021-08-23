@@ -763,10 +763,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6275211704252004436, guid: 68e2b887bba81064fba3215f6b07f176, type: 3}
-      propertyPath: m_Drag
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6864041861348908800, guid: 68e2b887bba81064fba3215f6b07f176, type: 3}
       propertyPath: _pulseWidth._value
       value: 1000

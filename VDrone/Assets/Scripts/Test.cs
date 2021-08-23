@@ -4,6 +4,7 @@ public class Test : MonoBehaviour
 {
     Rigidbody rb;
     public Vector3 Force;
+    public Vector3 Torque;
 
     private void Start()
     {
@@ -14,5 +15,6 @@ public class Test : MonoBehaviour
     private void FixedUpdate()
     {
         rb.AddRelativeForce(Force);
+        rb.AddRelativeTorque(Torque);
     }
 }
