@@ -41,7 +41,7 @@ namespace Robotics.Servos
 
         private float Direction => (float)_direction;
 
-        protected override void Update()
+        private void Update()
         {
             // Rotate transform if rigidbody is unspecified but transform is provided.
             if (_rotorRigidbody == null && _rotorTransform != null)
@@ -55,7 +55,7 @@ namespace Robotics.Servos
             }
         }
 
-        protected override void FixedUpdate()
+        private void FixedUpdate()
         {
             if (_rotorRigidbody != null)
             {

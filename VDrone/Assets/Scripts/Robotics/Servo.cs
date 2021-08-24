@@ -31,15 +31,5 @@ namespace Robotics
         /// </summary>
         /// <returns>Current pulse width in microseconds.</returns>
         public int readMicroseconds() => _pulseWidth.Value;
-
-        /// <summary>
-        /// Updates servo's visual every frame.
-        /// </summary>
-        protected abstract void Update();
-
-        /// <summary>
-        /// Updates servo's physics every physics frame.
-        /// </summary>
-        protected abstract void FixedUpdate();
     }
 }
