@@ -35,7 +35,7 @@ namespace Robotics
 
             var routine = StartCoroutine(InterruptPolling());
 
-            // Stores the coroutine in a list corresponding to the interrupt object.
+            // Stores the coroutine in a list corresponding to the interrupt object for later detachment.
             if (!_interrupts.ContainsKey(interrupt))
             {
                 _interrupts.Add(interrupt, new List<Coroutine>());
@@ -57,7 +57,7 @@ namespace Robotics
         }
 
         /// <summary>
-        /// Turns off the given interrupt.
+        /// Turns off the given interrupt. This detaches all ISRs attached to the <paramref name="interrupt"/> object.
         /// </summary>
         /// <seealso cref="attachInterrupt"/>
         /// <param name="interrupt">The object of the interrupt to disable.</param>
