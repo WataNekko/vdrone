@@ -23,18 +23,22 @@ namespace Robotics.Servos
 
         [Header("Torque")]
         [SerializeField]
-        [Tooltip("Rigidbody of the rotor to which to apply torque.\n\nIf unspecified, rotation is applied to the Rotor Transform if provided.")]
-        private Rigidbody _rotorRigidbody;
-        [SerializeField]
-        [Tooltip("Transform of the rotor to which to apply rotation if Rotor Rigidbody is unspecified.")]
+        [Tooltip("Transform of the rotor on which to apply rotation if Rotor Rigidbody is unspecified.")]
         private Transform _rotorTransform;
         [SerializeField]
-        [Tooltip("Rigidbody of the stator to which to apply reaction torque.")]
+        [Tooltip("Rigidbody of the rotor on which to apply torque. If unspecified, rotation is applied to the Rotor Transform if transform is provided.")]
+        private Rigidbody _rotorRigidbody;
+        [SerializeField]
+        [Tooltip("Rigidbody of the stator on which to apply reaction torque when Rotor Rigidbody is specified.")]
         private Rigidbody _statorRigidbody;
 
         [Header("Force")]
         [SerializeField]
+        [Tooltip("Maximum vertical force produced by the motor at full throttle, to be applied on Force Rigidbody. This value may be positive or negative to specify the force's direction.")]
         private float _maxForceProduced = 0f;
+        [SerializeField]
+        [Tooltip("Rigidbody on which to apply the vertical force produced by this motor.")]
+        private Rigidbody _forceRigidbody;
 
         private float Direction => (float)_direction;
 
@@ -53,15 +57,25 @@ namespace Robotics.Servos
 
         private void FixedUpdate()
         {
-            // Apply torque to rotor if specified
+            // Get the inverse lerp of pulse width between min and max for later calculations.
+            float pulseWidthPercent = Mathf.InverseLerp(MIN_PULSE_WIDTH, MAX_PULSE_WIDTH, readMicroseconds());
+
+            // Apply torque on rotor if specified
             if (_rotorRigidbody != null)
             {
 
-                // Apply reaction torque to stator if specified
+                // Apply reaction torque on stator if specified
                 if (_statorRigidbody != null)
                 {
 
                 }
+            }
+
+            // Apply force on rigidbody if specified
+            if (_forceRigidbody != null)
+            {
+                float force = Mathf.Lerp(0f, _maxForceProduced, pulseWidthPercent);
+                _forceRigidbody.AddRelativeForce(Vector3.up * force);
             }
         }
     }
