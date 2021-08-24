@@ -57,9 +57,6 @@ namespace Robotics.Servos
 
         private void FixedUpdate()
         {
-            // Get the inverse lerp of pulse width between min and max for later calculations.
-            float pulseWidthPercent = Mathf.InverseLerp(MIN_PULSE_WIDTH, MAX_PULSE_WIDTH, readMicroseconds());
-
             // Apply torque on rotor if specified
             if (_rotorRigidbody != null)
             {
@@ -74,7 +71,7 @@ namespace Robotics.Servos
             // Apply force on rigidbody if specified
             if (_forceRigidbody != null)
             {
-                float force = Mathf.Lerp(0f, _maxForceProduced, pulseWidthPercent);
+                float force = MathUtil.MapClamped(readMicroseconds(), from: (MIN_PULSE_WIDTH, MAX_PULSE_WIDTH), to: (0f, _maxForceProduced));
                 _forceRigidbody.AddRelativeForce(Vector3.up * force);
             }
         }
