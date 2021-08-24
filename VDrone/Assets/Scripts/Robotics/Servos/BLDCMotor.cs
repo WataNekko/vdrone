@@ -5,10 +5,6 @@ namespace Robotics.Servos
 {
     public class BLDCMotor : Servo
     {
-        // Motor's built-in throttle range
-        private const int MIN_THROTTLE = 1000;
-        private const int MAX_THROTTLE = 2000;
-
         private enum RotationDirection : sbyte
         {
             Clockwise = 1,
@@ -48,7 +44,7 @@ namespace Robotics.Servos
             if (_rotorRigidbody == null && _rotorTransform != null)
             {
                 // map pulse width to angular speed
-                float speed = MathUtil.MapClamped(readMicroseconds(), from: (MIN_THROTTLE, MAX_THROTTLE), to: (0f, _maxSpeed));
+                float speed = MathUtil.MapClamped(readMicroseconds(), from: (MIN_PULSE_WIDTH, MAX_PULSE_WIDTH), to: (0f, _maxSpeed));
 
                 // rotate
                 _rotorTransform.Rotate(Vector3.up * (Direction * speed * Time.deltaTime));
