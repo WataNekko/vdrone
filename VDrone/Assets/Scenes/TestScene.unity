@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 7132071}
   - component: {fileID: 7132073}
   - component: {fileID: 7132072}
+  - component: {fileID: 7132074}
   m_Layer: 5
   m_Name: ScaleDisplay
   m_TagString: Untagged
@@ -157,8 +158,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 88, y: 15}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: 135, y: 15}
+  m_SizeDelta: {x: 245, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &7132072
 MonoBehaviour:
@@ -190,10 +191,10 @@ MonoBehaviour:
     m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
-    m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
+    m_HorizontalOverflow: 1
+    m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 0
+  m_Text: 'Weight: 0 kg'
 --- !u!222 &7132073
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -202,6 +203,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7132070}
   m_CullTransparentMesh: 1
+--- !u!114 &7132074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7132070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 884f47cdb3856bd4188c17e05bd92362, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Text: {fileID: 7132072}
+  Scale: {fileID: 1018998433}
+  Format: 'Weight: {0} kg'
 --- !u!1 &46268608
 GameObject:
   m_ObjectHideFlags: 0
@@ -501,7 +517,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _weight: 0
-  _displayText: {fileID: 7132072}
+  _weightUpdated:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7132074}
+        m_TargetAssemblyTypeName: ScaleDisplay, Assembly-CSharp
+        m_MethodName: UpdateWeight
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: hi
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1684185766
 GameObject:
   m_ObjectHideFlags: 0

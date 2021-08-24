@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.Events;
 
 namespace Util
@@ -14,7 +13,7 @@ namespace Util
         [Tooltip("Calculated mass (kg) rounded to 4 decimal places.")]
         private float _weight;
         [SerializeField]
-        private UnityEvent WeightUpdated;
+        private UnityEvent _weightUpdated;
 
         private Dictionary<Collider, float> _registeredWeights = new Dictionary<Collider, float>();
 
@@ -53,6 +52,8 @@ namespace Util
             totalWeight = Mathf.Round(totalWeight * 1e4f) / 1e4f;
 
             _weight = totalWeight;
+
+            _weightUpdated.Invoke();
         }
     }
 }
