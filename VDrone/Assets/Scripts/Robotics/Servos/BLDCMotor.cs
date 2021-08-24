@@ -1,4 +1,5 @@
 using UnityEngine;
+using Util;
 
 namespace Robotics.Servos
 {
@@ -47,8 +48,7 @@ namespace Robotics.Servos
             if (_rotorRigidbody == null && _rotorTransform != null)
             {
                 // map pulse width to angular speed
-                float speed = Mathf.InverseLerp(MIN_THROTTLE, MAX_THROTTLE, readMicroseconds());
-                speed = Mathf.Lerp(0f, _maxSpeed, speed);
+                float speed = MathUtil.MapClamped(readMicroseconds(), from: (MIN_THROTTLE, MAX_THROTTLE), to: (0f, _maxSpeed));
 
                 // rotate
                 _rotorTransform.Rotate(Vector3.up * (Direction * speed * Time.deltaTime));
@@ -57,14 +57,15 @@ namespace Robotics.Servos
 
         private void FixedUpdate()
         {
+            // Apply torque to rotor if specified
             if (_rotorRigidbody != null)
             {
 
-            }
+                // Apply reaction torque to stator if specified
+                if (_statorRigidbody != null)
+                {
 
-            if (_statorRigidbody != null)
-            {
-
+                }
             }
         }
     }
