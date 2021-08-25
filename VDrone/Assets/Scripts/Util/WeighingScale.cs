@@ -49,7 +49,7 @@ namespace Util
                 totalWeight += weight;
             }
             // Round to 4 decimal places
-            totalWeight = Mathf.Round(totalWeight * 1e4f) / 1e4f;
+            totalWeight = Mathf.Round(totalWeight * 1e4f) * 1e-4f;
 
             _weight = totalWeight;
 

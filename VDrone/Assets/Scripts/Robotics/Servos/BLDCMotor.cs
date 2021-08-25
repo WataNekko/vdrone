@@ -12,9 +12,6 @@ namespace Robotics.Servos
             CounterClockwise = -1
         }
 
-        public float TargetSpeed;
-        public float ActualSpeed;
-
         [Header("BLDC Motor's Spec")]
         [SerializeField]
         [Tooltip("Maximum angular speed (rad/s) at full throttle.")]
@@ -99,22 +96,31 @@ namespace Robotics.Servos
             }
         }
 
+        // field to store torque's integrated value
+        private float _torqueIntegral = 0f;
+
         /// <summary>
         /// Applies torque according to throttle value.
         /// </summary>
         private void ApplyTorque(float throttle)
         {
-            // Implements a PID controller to rotate the rotor at a desired angular speed
-            const float P_GAIN = 0.055f;
+            // Implements a PI controller to rotate the rotor at a desired angular speed.
+            // 
+            // WARNING: These values are designed specifically for a default rotor's rigidbody of mass 0.074 and angular drag 0.98.
+            // Other specs may not work as smoothly and correctly. And masses below 0.036 with angular drag 0.98 WILL BREAK!
+            const float P_GAIN = 0.0266f;
+            const float I_GAIN = 0.0005318f;
 
             float targetSpeed = Direction * Mathf.Lerp(0f, _maxSpeed, throttle);
             float actualSpeed = _rotorRigidbody.transform.InverseTransformDirection(_rotorRigidbody.angularVelocity).y;
 
             float error = targetSpeed - actualSpeed;
-            float torque = error * P_GAIN;
 
-            TargetSpeed = targetSpeed;
-            ActualSpeed = actualSpeed;
+            _torqueIntegral += I_GAIN * error;
+            float torque = (P_GAIN * error) + (_torqueIntegral);
+
+            // Rounds torque to 7 decimal places to prevent values too small from updating the rigidbody.
+            torque = Mathf.Round(torque * 1e7f) * 1e-7f;
 
             _rotorRigidbody.AddRelativeTorque(0f, torque, 0f);
 
