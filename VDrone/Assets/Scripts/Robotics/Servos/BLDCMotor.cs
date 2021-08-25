@@ -16,7 +16,7 @@ namespace Robotics.Servos
         [SerializeField]
         [Tooltip("Maximum angular speed (rad/s) at full throttle.")]
         [Min(0f)]
-        private float _maxSpeed = 125.664f; // 0.0698f impulse torque on 0.074 kg rb ~ 7200f deg/s = 125.664f rad/s
+        private float _maxSpeed = 125.664f;
         [SerializeField]
         [Tooltip("Whether the rotation direction is clockwise or counter-clockwise.")]
         private RotationDirection _direction = RotationDirection.Clockwise;
@@ -42,20 +42,29 @@ namespace Robotics.Servos
 
         private float Direction => (float)_direction;
 
-        private void Update()
+        protected virtual void Awake()
+        {
+            if (_rotorRigidbody != null)
+            {
+                _rotorRigidbody.maxAngularVelocity = Mathf.Infinity;
+            }
+        }
+
+        protected virtual void Update()
         {
             // Rotate transform if rigidbody is unspecified but transform is provided.
             if (_rotorRigidbody == null && _rotorTransform != null)
             {
                 // map pulse width to angular speed
                 float speed = MathUtil.MapClamped(readMicroseconds(), from: (MIN_PULSE_WIDTH, MAX_PULSE_WIDTH), to: (0f, _maxSpeed));
+                speed *= Mathf.Rad2Deg;
 
                 // rotate
                 _rotorTransform.Rotate(Vector3.up * (Direction * speed * Time.deltaTime));
             }
         }
 
-        private void FixedUpdate()
+        protected virtual void FixedUpdate()
         {
             // Apply torque on rotor if specified
             if (_rotorRigidbody != null)

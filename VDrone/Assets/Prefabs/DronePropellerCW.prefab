@@ -256,7 +256,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8654607493730785424}
   - component: {fileID: 2174273188994779883}
-  - component: {fileID: 7098644568097090714}
   - component: {fileID: 8168268611710436120}
   m_Layer: 0
   m_Name: DronePropellerCW
@@ -290,49 +289,13 @@ Rigidbody:
   m_GameObject: {fileID: 9142934953736054697}
   serializedVersion: 2
   m_Mass: 0.074
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_Drag: 0.75
+  m_AngularDrag: 34.8
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!59 &7098644568097090714
-HingeJoint:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9142934953736054697}
-  m_ConnectedBody: {fileID: 0}
-  m_ConnectedArticulationBody: {fileID: 0}
-  m_Anchor: {x: 0, y: 0, z: 0}
-  m_Axis: {x: 0, y: 1, z: 0}
-  m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: 0, z: 0}
-  m_UseSpring: 0
-  m_Spring:
-    spring: 0
-    damper: 0
-    targetPosition: 0
-  m_UseMotor: 0
-  m_Motor:
-    targetVelocity: 0
-    force: 0
-    freeSpin: 0
-  m_UseLimits: 0
-  m_Limits:
-    min: 0
-    max: 0
-    bounciness: 0
-    bounceMinVelocity: 0.2
-    contactDistance: 0
-  m_BreakForce: Infinity
-  m_BreakTorque: Infinity
-  m_EnableCollision: 0
-  m_EnablePreprocessing: 1
-  m_MassScale: 1
-  m_ConnectedMassScale: 1
 --- !u!114 &8168268611710436120
 MonoBehaviour:
   m_ObjectHideFlags: 0
