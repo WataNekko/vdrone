@@ -1179,6 +1179,10 @@ PrefabInstance:
       propertyPath: m_ConnectedAnchor.z
       value: -0.15537992
       objectReference: {fileID: 0}
+    - target: {fileID: 8168268611710436120, guid: 787cd04099ba2824daf06a5e34d36873, type: 3}
+      propertyPath: _statorRigidbody
+      value: 
+      objectReference: {fileID: 6275211704252004436}
     - target: {fileID: 8654607493730785424, guid: 787cd04099ba2824daf06a5e34d36873, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -1305,6 +1309,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: propeller1
       objectReference: {fileID: 0}
+    - target: {fileID: 1973968501785104090, guid: ee250cb50f5a9504481cb5e95da4a593, type: 3}
+      propertyPath: _statorRigidbody
+      value: 
+      objectReference: {fileID: 6275211704252004436}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ee250cb50f5a9504481cb5e95da4a593, type: 3}
 --- !u!4 &805346445789327485 stripped
@@ -1335,6 +1343,10 @@ PrefabInstance:
       propertyPath: m_ConnectedAnchor.z
       value: 0.15537992
       objectReference: {fileID: 0}
+    - target: {fileID: 8168268611710436120, guid: 787cd04099ba2824daf06a5e34d36873, type: 3}
+      propertyPath: _statorRigidbody
+      value: 
+      objectReference: {fileID: 6275211704252004436}
     - target: {fileID: 8654607493730785424, guid: 787cd04099ba2824daf06a5e34d36873, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -1461,6 +1473,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: propeller3
       objectReference: {fileID: 0}
+    - target: {fileID: 1973968501785104090, guid: ee250cb50f5a9504481cb5e95da4a593, type: 3}
+      propertyPath: _statorRigidbody
+      value: 
+      objectReference: {fileID: 6275211704252004436}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ee250cb50f5a9504481cb5e95da4a593, type: 3}
 --- !u!4 &2442503832662834481 stripped

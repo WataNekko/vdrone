@@ -349,10 +349,10 @@ MonoBehaviour:
     _min: 1000
     _max: 2000
     _value: 1500
-  _maxSpeed: 7200
+  _maxSpeed: 125.664
   _direction: 1
   _rotorTransform: {fileID: 8654607493730785424}
   _rotorRigidbody: {fileID: 2174273188994779883}
   _statorRigidbody: {fileID: 0}
-  _maxForceProduced: -8
+  _maxForceProduced: 0
   _forceRigidbody: {fileID: 2174273188994779883}

@@ -14,9 +14,9 @@ namespace Robotics.Servos
 
         [Header("BLDC Motor's Spec")]
         [SerializeField]
-        [Tooltip("Maximum angular speed (degrees/second) at full throttle.")]
+        [Tooltip("Maximum angular speed (rad/s) at full throttle.")]
         [Min(0f)]
-        private float _maxSpeed = 7200f; // 0.0698f impulse torque on 0.074 kg rb ~ 7200f deg/s
+        private float _maxSpeed = 125.664f; // 0.0698f impulse torque on 0.074 kg rb ~ 7200f deg/s = 125.664f rad/s
         [SerializeField]
         [Tooltip("Whether the rotation direction is clockwise or counter-clockwise.")]
         private RotationDirection _direction = RotationDirection.Clockwise;
