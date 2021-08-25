@@ -2,9 +2,12 @@ using UnityEngine;
 
 public class Test : MonoBehaviour
 {
-    Rigidbody rb;
+    public Rigidbody rb;
     public Vector3 Force;
     public Vector3 Torque;
+    public bool ApplyImpulse = false;
+    public Vector3 ForceImpulse;
+    public Vector3 TorqueImpulse;
 
     private void Start()
     {
@@ -16,5 +19,11 @@ public class Test : MonoBehaviour
     {
         rb.AddRelativeForce(Force);
         rb.AddRelativeTorque(Torque);
+        if (ApplyImpulse)
+        {
+            rb.AddRelativeForce(ForceImpulse, ForceMode.Impulse);
+            rb.AddRelativeTorque(TorqueImpulse, ForceMode.Impulse);
+            ApplyImpulse = false;
+        }
     }
 }
