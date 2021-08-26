@@ -53,7 +53,7 @@ namespace Robotics.Servos
         /// </summary>
         protected virtual void FixedUpdate()
         {
-            // Apply torque and force on rigidbodies if specified
+            // Apply torque and force on rigidbody if specified
             if (_rotorRigidbody != null)
             {
                 ApplyTorqueAndForce();
@@ -70,10 +70,10 @@ namespace Robotics.Servos
         {
             // Implements a PI controller to rotate the rotor at a desired angular speed.
             // 
-            // WARNING: These values are designed specifically for a default rotor's rigidbody of mass 0.074 and angular drag 0.98.
-            // Other specs may not work as smoothly and correctly. And masses below 0.036 with angular drag 0.98 WILL BREAK!
-            const float P_GAIN = 0.0266f;
-            const float I_GAIN = 0.0005318f;
+            // WARNING: These values are designed specifically for a default rotor's rigidbody of mass 0.074 and angular drag 2.
+            // Other specs may NOT WORK as smoothly and correctly!
+            const float P_GAIN = 0.027756f;
+            const float I_GAIN = 0.0011565f;
 
             float dir = (float)_direction;
 
@@ -82,10 +82,8 @@ namespace Robotics.Servos
 
             float error = targetSpeed - actualSpeed;
 
-
             torqueIntegral += I_GAIN * error;
             float torque = (P_GAIN * error) + (torqueIntegral);
-
             // Rounds torque to 7 decimal places to prevent values too small from updating the rigidbody.
             torque = Mathf.Round(torque * 1e7f) * 1e-7f;
 
@@ -96,13 +94,17 @@ namespace Robotics.Servos
             // Apply reaction torque on stator if specified
             if (_statorRigidbody != null)
             {
-                _statorRigidbody.AddRelativeTorque(0f, -torque, 0f);
+                _statorRigidbody.AddRelativeTorque(0f, -actualSpeed * 0.0001f, 0f);
             }
 
             // Apply force on rigidbody if specified
             if (_forceRigidbody != null)
             {
-                _forceRigidbody.AddRelativeForce(0f, dir * actualSpeed * _forcePerSpeedUnit, 0f);
+                float force = dir * actualSpeed * _forcePerSpeedUnit;
+                // Similar to torque, force is rounded to 5 decimal places to prevent small values from updating the rigidbody.
+                force = Mathf.Round(force * 1e5f) * 1e-5f;
+
+                _forceRigidbody.AddRelativeForce(0f, force, 0f);
             }
         }
     }
