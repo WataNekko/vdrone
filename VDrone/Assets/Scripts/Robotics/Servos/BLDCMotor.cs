@@ -23,10 +23,7 @@ namespace Robotics.Servos
 
         [Header("Torque")]
         [SerializeField]
-        [Tooltip("Transform of the rotor on which to apply rotation if Rotor Rigidbody is unspecified.")]
-        private Transform _rotorTransform;
-        [SerializeField]
-        [Tooltip("Rigidbody of the rotor on which to apply torque. If unspecified, rotation is applied to the Rotor Transform if transform is provided.")]
+        [Tooltip("Rigidbody of the rotor on which to apply torque.")]
         private Rigidbody _rotorRigidbody;
         [SerializeField]
         [Tooltip("Rigidbody of the stator on which to apply reaction torque when Rotor Rigidbody is specified.")]
@@ -34,13 +31,11 @@ namespace Robotics.Servos
 
         [Header("Force")]
         [SerializeField]
-        [Tooltip("Maximum vertical force produced by the motor at full throttle, to be applied on Force Rigidbody. This value may be positive or negative to specify the force's direction.")]
-        private float _maxForceProduced = 0f;
+        [Tooltip("The vertical force produced by the motor per 1 rad/s angular speed, to be applied on Force Rigidbody.\nThe actual force applied is proportional to the rotor's current speed. This value may be positive or negative to specify the force's direction.")]
+        private float _forcePerSpeedUnit = 0f;
         [SerializeField]
-        [Tooltip("Rigidbody on which to apply the vertical force produced by this motor.")]
+        [Tooltip("Rigidbody on which to apply the vertical force produced by this motor.\nThe force is only applied if both Rotor Rigidbody and Force Rigidbody are specified (which can be the same rigidbody).")]
         private Rigidbody _forceRigidbody;
-
-        private float Direction => (float)_direction;
 
         /// <summary>
         /// Sets max angular velocity to Infinity on awake.
@@ -54,55 +49,24 @@ namespace Robotics.Servos
         }
 
         /// <summary>
-        /// Rotates transform manually if rigidbody is not specified.
-        /// </summary>
-        protected virtual void Update()
-        {
-            // Rotate transform if rigidbody is unspecified but transform is provided.
-            if (_rotorRigidbody == null && _rotorTransform != null)
-            {
-                // map pulse width to angular speed
-                float speed = MathUtil.MapClamped(readMicroseconds(), from: (MIN_PULSE_WIDTH, MAX_PULSE_WIDTH), to: (0f, _maxSpeed));
-                speed *= Mathf.Rad2Deg;
-
-                // rotate
-                _rotorTransform.Rotate(Vector3.up * (Direction * speed * Time.deltaTime));
-            }
-        }
-
-        /// <summary>
-        /// Applies torque and force according to throttle value.
+        /// Updates motor's physics.
         /// </summary>
         protected virtual void FixedUpdate()
         {
-            if (_rotorRigidbody == null && _forceRigidbody == null)
-            {
-                return;
-            }
-
-            // Get the throttle value (from 0 to 1) for later calculations
-            float throttle = Mathf.InverseLerp(MIN_PULSE_WIDTH, MAX_PULSE_WIDTH, readMicroseconds());
-
-            // Apply torque on rigidbodies if specified
+            // Apply torque and force on rigidbodies if specified
             if (_rotorRigidbody != null)
             {
-                ApplyTorque(throttle);
-            }
-
-            // Apply force on rigidbody if specified
-            if (_forceRigidbody != null)
-            {
-                ApplyForce(throttle);
+                ApplyTorqueAndForce();
             }
         }
 
         // field to store torque's integrated value
-        private float _torqueIntegral = 0f;
+        private float torqueIntegral = 0f;
 
         /// <summary>
-        /// Applies torque according to throttle value.
+        /// Applies torque according to the throttle value and force corresponding to the rotor's actual angular speed.
         /// </summary>
-        private void ApplyTorque(float throttle)
+        private void ApplyTorqueAndForce()
         {
             // Implements a PI controller to rotate the rotor at a desired angular speed.
             // 
@@ -111,17 +75,22 @@ namespace Robotics.Servos
             const float P_GAIN = 0.0266f;
             const float I_GAIN = 0.0005318f;
 
-            float targetSpeed = Direction * Mathf.Lerp(0f, _maxSpeed, throttle);
+            float dir = (float)_direction;
+
+            float targetSpeed = dir * MathUtil.MapClamped(readMicroseconds(), from: (MIN_PULSE_WIDTH, MAX_PULSE_WIDTH), to: (0f, _maxSpeed));
             float actualSpeed = _rotorRigidbody.transform.InverseTransformDirection(_rotorRigidbody.angularVelocity).y;
 
             float error = targetSpeed - actualSpeed;
 
-            _torqueIntegral += I_GAIN * error;
-            float torque = (P_GAIN * error) + (_torqueIntegral);
+
+            torqueIntegral += I_GAIN * error;
+            float torque = (P_GAIN * error) + (torqueIntegral);
 
             // Rounds torque to 7 decimal places to prevent values too small from updating the rigidbody.
             torque = Mathf.Round(torque * 1e7f) * 1e-7f;
 
+
+            // Apply torque on rotor
             _rotorRigidbody.AddRelativeTorque(0f, torque, 0f);
 
             // Apply reaction torque on stator if specified
@@ -129,15 +98,12 @@ namespace Robotics.Servos
             {
                 _statorRigidbody.AddRelativeTorque(0f, -torque, 0f);
             }
-        }
 
-        /// <summary>
-        /// Applies force corresponding to throttle value.
-        /// </summary>
-        private void ApplyForce(float throttle)
-        {
-            float force = Mathf.Lerp(0f, _maxForceProduced, throttle);
-            _forceRigidbody.AddRelativeForce(0f, force, 0f);
+            // Apply force on rigidbody if specified
+            if (_forceRigidbody != null)
+            {
+                _forceRigidbody.AddRelativeForce(0f, dir * actualSpeed * _forcePerSpeedUnit, 0f);
+            }
         }
     }
 }
