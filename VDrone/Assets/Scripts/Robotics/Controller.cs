@@ -15,7 +15,7 @@ namespace Robotics
 
         /// <summary>
         /// Attaches an interrupt service routine to this <see cref="Controller"/>.
-        /// Every update, <paramref name="interrupt"/> is passed into <paramref name="condition"/> to be polled. If <paramref name="condition"/> returns <c>true</c>, <paramref name="ISR"/> is called.
+        /// Every update, <paramref name="interrupt"/> is passed into <paramref name="condition"/> to be polled. If <paramref name="condition"/> returns true, <paramref name="ISR"/> is called.
         /// </summary>
         /// <seealso cref="detachInterrupt"/>
         /// <typeparam name="T">Any type.</typeparam>
@@ -76,30 +76,56 @@ namespace Robotics
 
         protected static class InterruptCondition
         {
-            //private static Func<T, bool> PreviousValueComparer<T, TValue>(Func<T, TValue> valueExtracter, Func<TValue, TValue, bool> comparer)
-            //{
-            //    bool init = false;
-            //    TValue prevValue = default;
-            //    return (T obj) =>
-            //    {
-            //        bool result = comparer(prevValue, valueExtracter(obj));
+            /// <summary>
+            /// Gets a function that returns true when the value extracted from the input object changes, false otherwise.
+            /// </summary>
+            /// <typeparam name="T">Type of the input object.</typeparam>
+            /// <typeparam name="TValue">Type of the value extracted from the input object.</typeparam>
+            /// <param name="getValue">A function that extracts a value from an input object.</param>
+            /// <returns>A function that returns true when the value extracted from the input object changes, false otherwise.</returns>
+            public static Func<T, bool> Change<T, TValue>(Func<T, TValue> getValue)
+            {
+                return PreviousValueComparer(getValue, (prev, curr) => !curr.Equals(prev));
+            }
 
-            //        if (!init)
-            //        {
-            //            return false;
-            //        }
-            //        else
-            //        {
-            //            return comparer()
-            //        }
+            /// <summary>
+            /// Gets a function that returns true when the current value extracted from the input object follows the previous value, false otherwise.
+            /// </summary>
+            /// <typeparam name="T">Type of the input object.</typeparam>
+            /// <typeparam name="TValue">Type of the value extracted from the input object.</typeparam>
+            /// <param name="getValue">A function that extracts a value from an input object.</param>
+            /// <returns>A function that returns true when the current value extracted from the input object follows the previous value, false otherwise.</returns>
+            public static Func<T, bool> Rising<T, TValue>(Func<T, TValue> getValue) where TValue : IComparable<TValue>
+            {
+                return PreviousValueComparer(getValue, (prev, curr) => curr.CompareTo(prev) > 0);
+            }
 
-            //    };
-            //}
+            /// <summary>
+            /// Gets a function that returns true when the current value extracted from the input object precedes the previous value, false otherwise.
+            /// </summary>
+            /// <typeparam name="T">Type of the input object.</typeparam>
+            /// <typeparam name="TValue">Type of the value extracted from the input object.</typeparam>
+            /// <param name="getValue">A function that extracts a value from an input object.</param>
+            /// <returns>A function that returns true when the current value extracted from the input object precedes the previous value, false otherwise.</returns>
+            public static Func<T, bool> Falling<T, TValue>(Func<T, TValue> getValue) where TValue : IComparable<TValue>
+            {
+                return PreviousValueComparer(getValue, (prev, curr) => curr.CompareTo(prev) < 0);
+            }
 
-            //public static Func<T, bool> Change<T, TValue>(Func<T, TValue> valueExtracter) where T
-            //{
-            //    return PreviousValueComparer(valueExtracter, (prev, curr) => prev != curr);
-            //}
+            private static Func<T, bool> PreviousValueComparer<T, TValue>(Func<T, TValue> getValue, Func<TValue, TValue, bool> comparer)
+            {
+                bool init = false;
+                TValue prev = default;
+
+                return obj =>
+                {
+                    TValue curr = getValue(obj);
+                    bool result = init ? comparer(prev, curr) : !(init = true);
+                    prev = curr;
+
+                    return result;
+                };
+            }
         }
     }
 }
