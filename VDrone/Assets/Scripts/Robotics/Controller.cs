@@ -73,5 +73,33 @@ namespace Robotics
                 _interrupts.Remove(interrupt);
             }
         }
+
+        protected static class InterruptCondition
+        {
+            //private static Func<T, bool> PreviousValueComparer<T, TValue>(Func<T, TValue> valueExtracter, Func<TValue, TValue, bool> comparer)
+            //{
+            //    bool init = false;
+            //    TValue prevValue = default;
+            //    return (T obj) =>
+            //    {
+            //        bool result = comparer(prevValue, valueExtracter(obj));
+
+            //        if (!init)
+            //        {
+            //            return false;
+            //        }
+            //        else
+            //        {
+            //            return comparer()
+            //        }
+
+            //    };
+            //}
+
+            //public static Func<T, bool> Change<T, TValue>(Func<T, TValue> valueExtracter) where T
+            //{
+            //    return PreviousValueComparer(valueExtracter, (prev, curr) => prev != curr);
+            //}
+        }
     }
 }

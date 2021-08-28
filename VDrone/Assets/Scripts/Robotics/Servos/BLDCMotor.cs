@@ -70,15 +70,21 @@ namespace Robotics.Servos
         {
             // Implements a PI controller to rotate the rotor at a desired angular speed.
             // 
-            // WARNING: These values are designed specifically for a default rotor's rigidbody of mass 0.074 and angular drag 2.
+            // WARNING: These values are designed specifically for a default rotor's rigidbody of mass 0.074 and angular drag 0.5.
             // Other specs may NOT WORK as smoothly and correctly!
-            const float P_GAIN = 0.027756f;
-            const float I_GAIN = 0.0011565f;
+            const float P_GAIN = 0.027_762_36f;
+            const float I_GAIN = 0.000_280_43f;
 
             float dir = (float)_direction;
 
+            // maps pulse width to speed
             float targetSpeed = dir * MathUtil.MapClamped(readMicroseconds(), from: (MIN_PULSE_WIDTH, MAX_PULSE_WIDTH), to: (0f, _maxSpeed));
-            float actualSpeed = _rotorRigidbody.transform.InverseTransformDirection(_rotorRigidbody.angularVelocity).y;
+            // actual speed is relative to stator if stator is available, otherwise relative to rotor.
+            float actualSpeed = ((_statorRigidbody != null)
+                ? _statorRigidbody
+                : _rotorRigidbody).transform.InverseTransformDirection(_rotorRigidbody.angularVelocity).y;
+            // adjusts rotor solver iteration to increase physics accuracy for higher speed
+            _rotorRigidbody.solverIterations = MathUtil.Map(Mathf.Abs((int)actualSpeed), from: (0, (int)_maxSpeed), to: (6, 30));
 
             float error = targetSpeed - actualSpeed;
 
@@ -86,6 +92,8 @@ namespace Robotics.Servos
             float torque = (P_GAIN * error) + (torqueIntegral);
             // Rounds torque to 7 decimal places to prevent values too small from updating the rigidbody.
             torque = Mathf.Round(torque * 1e7f) * 1e-7f;
+            Target = targetSpeed;
+            Actual = actualSpeed;
 
 
             // Apply torque on rotor
@@ -94,7 +102,7 @@ namespace Robotics.Servos
             // Apply reaction torque on stator if specified
             if (_statorRigidbody != null)
             {
-                _statorRigidbody.AddRelativeTorque(0f, -actualSpeed * 0.0001f, 0f);
+                _statorRigidbody.AddRelativeTorque(0f, -torque, 0f);
             }
 
             // Apply force on rigidbody if specified
@@ -103,9 +111,14 @@ namespace Robotics.Servos
                 float force = dir * actualSpeed * _forcePerSpeedUnit;
                 // Similar to torque, force is rounded to 5 decimal places to prevent small values from updating the rigidbody.
                 force = Mathf.Round(force * 1e5f) * 1e-5f;
+                Force = force;
 
                 _forceRigidbody.AddRelativeForce(0f, force, 0f);
             }
         }
+
+        public float Target;
+        public float Actual;
+        public float Force;
     }
 }

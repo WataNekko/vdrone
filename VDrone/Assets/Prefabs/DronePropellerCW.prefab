@@ -290,7 +290,7 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 0.074
   m_Drag: 0.375
-  m_AngularDrag: 2
+  m_AngularDrag: 0.5
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -316,5 +316,8 @@ MonoBehaviour:
   _direction: 1
   _rotorRigidbody: {fileID: 2174273188994779883}
   _statorRigidbody: {fileID: 0}
-  _forcePerSpeedUnit: 0.004781
+  _forcePerSpeedUnit: 0.0032
   _forceRigidbody: {fileID: 2174273188994779883}
+  Target: 0
+  Actual: 0
+  Force: 0
