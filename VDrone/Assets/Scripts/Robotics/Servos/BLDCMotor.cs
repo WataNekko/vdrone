@@ -68,12 +68,17 @@ namespace Robotics.Servos
         /// </summary>
         private void ApplyTorqueAndForce()
         {
+            // Caches rotor's transform for later possible uses
+            Transform rotorTf = _rotorRigidbody.transform;
+
+            #region Calculate torque
+
             // Implements a PI controller to rotate the rotor at a desired angular speed.
             // 
             // WARNING: These values are designed specifically for a default rotor's rigidbody of mass 0.074 and angular drag 0.5.
             // Other specs may NOT WORK as smoothly and correctly!
-            const float P_GAIN = 0.027_762_36f;
-            const float I_GAIN = 0.000_280_43f;
+            const float P_GAIN = 0.02776236f;
+            const float I_GAIN = 0.0002804293f;
 
             float dir = (float)_direction;
 
@@ -81,20 +86,27 @@ namespace Robotics.Servos
             float targetSpeed = dir * MathUtil.MapClamped(readMicroseconds(), from: (MIN_PULSE_WIDTH, MAX_PULSE_WIDTH), to: (0f, _maxSpeed));
             // actual speed is relative to stator if stator is available, otherwise relative to rotor.
             float actualSpeed = ((_statorRigidbody != null)
-                ? _statorRigidbody
-                : _rotorRigidbody).transform.InverseTransformDirection(_rotorRigidbody.angularVelocity).y;
-            // adjusts rotor solver iteration to increase physics accuracy for higher speed
-            _rotorRigidbody.solverIterations = MathUtil.Map(Mathf.Abs((int)actualSpeed), from: (0, (int)_maxSpeed), to: (6, 30));
+                ? _statorRigidbody.transform
+                : rotorTf).InverseTransformDirection(_rotorRigidbody.angularVelocity).y;
+            // adjusts rotor solver iteration to increase physics accuracy for higher speeds
+            _rotorRigidbody.solverIterations = MathUtil.Map((int)actualSpeed, from: (0, (int)(dir * _maxSpeed)), to: (6, 30));
 
             float error = targetSpeed - actualSpeed;
 
-            torqueIntegral += I_GAIN * error;
-            float torque = (P_GAIN * error) + (torqueIntegral);
-            // Rounds torque to 7 decimal places to prevent values too small from updating the rigidbody.
-            torque = Mathf.Round(torque * 1e7f) * 1e-7f;
-            Target = targetSpeed;
-            Actual = actualSpeed;
+            // This variable is for dealing with the steady-state error from the P controller.
+            // The value is only integrated when the error is small.
+            torqueIntegral = (error >= -0.001f && error <= 0.001f)
+                ? torqueIntegral + (I_GAIN * error)
+                : I_GAIN * targetSpeed;
 
+            float torque = (P_GAIN * error) + (torqueIntegral);
+            // Rounds torques that are too small to 0 to prevent updating the rigidbody.
+            if (torque > -1e-7f && torque < 1e-7f)
+            {
+                torque = 0f;
+            }
+
+            #endregion
 
             // Apply torque on rotor
             _rotorRigidbody.AddRelativeTorque(0f, torque, 0f);
@@ -102,23 +114,21 @@ namespace Robotics.Servos
             // Apply reaction torque on stator if specified
             if (_statorRigidbody != null)
             {
-                _statorRigidbody.AddRelativeTorque(0f, -torque, 0f);
+                _statorRigidbody.AddTorque(rotorTf.TransformDirection(0f, -torque, 0f));
             }
 
             // Apply force on rigidbody if specified
             if (_forceRigidbody != null)
             {
                 float force = dir * actualSpeed * _forcePerSpeedUnit;
-                // Similar to torque, force is rounded to 5 decimal places to prevent small values from updating the rigidbody.
-                force = Mathf.Round(force * 1e5f) * 1e-5f;
-                Force = force;
+                // Similar to torque, small forces are rounded to 0 to prevent updating the rigidbody.
+                if (force > -1e-5f && force < 1e-5f)
+                {
+                    force = 0f;
+                }
 
-                _forceRigidbody.AddRelativeForce(0f, force, 0f);
+                _forceRigidbody.AddForce(rotorTf.TransformDirection(0f, force, 0f));
             }
         }
-
-        public float Target;
-        public float Actual;
-        public float Force;
     }
 }
