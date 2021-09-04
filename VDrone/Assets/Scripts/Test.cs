@@ -25,5 +25,14 @@ public class Test : MonoBehaviour
             rb.AddRelativeTorque(TorqueImpulse, ForceMode.Impulse);
             ApplyImpulse = false;
         }
+        if (Tf != null)
+        {
+            AngVel = Tf.InverseTransformDirection(rb.angularVelocity);
+            Ang = AngVel.magnitude;
+        }
     }
+
+    public Vector3 AngVel;
+    public float Ang;
+    public Transform Tf;
 }
