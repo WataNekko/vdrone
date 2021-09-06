@@ -255,7 +255,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8654607493730785424}
-  - component: {fileID: 2174273188994779883}
   - component: {fileID: 8168268611710436120}
   m_Layer: 0
   m_Name: DronePropellerCW
@@ -280,22 +279,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!54 &2174273188994779883
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9142934953736054697}
-  serializedVersion: 2
-  m_Mass: 0.074
-  m_Drag: 0.375
-  m_AngularDrag: 0.5
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!114 &8168268611710436120
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -312,12 +295,9 @@ MonoBehaviour:
     _min: 1000
     _max: 2000
     _value: 1500
-  _maxSpeed: 2094.395
+  _maxSpeed: 120000
   _direction: 1
-  _rotorRigidbody: {fileID: 2174273188994779883}
-  _statorRigidbody: {fileID: 0}
-  _forcePerSpeedUnit: 0.0032
-  _forceRigidbody: {fileID: 2174273188994779883}
-  Target: 0
-  Actual: 0
-  Force: 0
+  _rotorTransform: {fileID: 8654607493730785424}
+  _torqueAmount: 0.000001
+  _forceAmount: 0
+  _rigidbody: {fileID: 0}
