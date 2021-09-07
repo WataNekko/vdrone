@@ -299,5 +299,5 @@ MonoBehaviour:
   _direction: 1
   _rotorTransform: {fileID: 8654607493730785424}
   _torqueAmount: 0.000001
-  _forceAmount: 0
+  _forceAmount: 0.000055
   _rigidbody: {fileID: 0}
