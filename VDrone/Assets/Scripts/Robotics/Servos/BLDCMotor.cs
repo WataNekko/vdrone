@@ -1,5 +1,6 @@
 using UnityEngine;
 using Util;
+using GD.MinMaxSlider;
 
 namespace Robotics.Servos
 {
@@ -31,7 +32,8 @@ namespace Robotics.Servos
         [Header("Sounds")]
         [SerializeField, Tooltip("The audio clip to play when the motor rotates.")]
         private AudioClip _rotateSound;
-        private Vector2 _rotatePitchRange;
+        [SerializeField, MinMaxSlider(-3, 3)]
+        private Vector2 _rotatePitchRange = Vector2.one;
 
         private AudioSource _rotateSoundSrc;
 
@@ -87,7 +89,7 @@ namespace Robotics.Servos
                 _rigidbody.AddForceAtPosition(rotorUp * (speed * _forceAmount), _rotorTransform.position);
             }
 
-            
+
         }
 
         /// <summary>

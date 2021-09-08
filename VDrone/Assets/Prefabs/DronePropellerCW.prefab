@@ -302,3 +302,4 @@ MonoBehaviour:
   _forceAmount: 0.000055
   _rigidbody: {fileID: 0}
   _rotateSound: {fileID: 8300000, guid: c8e6f7cb9a09df546bc128ce91dead5e, type: 3}
+  _rotatePitchRange: {x: 0.75, y: 1.5}
