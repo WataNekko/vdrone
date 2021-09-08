@@ -28,6 +28,13 @@ namespace Robotics.Servos
         [SerializeField, Tooltip("Rigidbody on which to apply the reaction torque and vertical force produced by this motor.")]
         private Rigidbody _rigidbody;
 
+        [Header("Sounds")]
+        [SerializeField, Tooltip("The audio clip to play when the motor rotates.")]
+        private AudioClip _rotateSound;
+        private Vector2 _rotatePitchRange;
+
+        private AudioSource _rotateSoundSrc;
+
         /// <summary>
         /// Field storing the previous angular speed with direction of the rotor.
         /// </summary>
@@ -78,6 +85,25 @@ namespace Robotics.Servos
 
                 _rigidbody.AddTorque(rotorUp * reactionTorque);
                 _rigidbody.AddForceAtPosition(rotorUp * (speed * _forceAmount), _rotorTransform.position);
+            }
+
+            
+        }
+
+        /// <summary>
+        /// Initialize audio source on enable.
+        /// </summary>
+        protected virtual void OnEnable()
+        {
+            if (_rotorTransform != null && _rotateSoundSrc == null)
+            {
+                // Audio source is on the rotor.
+                _rotateSoundSrc = _rotorTransform.gameObject.AddComponent<AudioSource>();
+                _rotateSoundSrc.clip = _rotateSound;
+                _rotateSoundSrc.loop = true;
+                _rotateSoundSrc.spatialBlend = 1f;
+
+                _rotateSoundSrc.Play();
             }
         }
     }

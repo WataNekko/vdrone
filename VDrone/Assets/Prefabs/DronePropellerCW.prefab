@@ -301,3 +301,4 @@ MonoBehaviour:
   _torqueAmount: 0.000001
   _forceAmount: 0.000055
   _rigidbody: {fileID: 0}
+  _rotateSound: {fileID: 8300000, guid: c8e6f7cb9a09df546bc128ce91dead5e, type: 3}
