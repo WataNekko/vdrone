@@ -99,13 +99,11 @@ namespace Robotics.Servos
         {
             if (_rotorTransform != null && _rotateSoundSrc == null)
             {
-                // Audio source is on the rotor.
+                // Places audio source on the rotor.
                 _rotateSoundSrc = _rotorTransform.gameObject.AddComponent<AudioSource>();
                 _rotateSoundSrc.clip = _rotateSound;
                 _rotateSoundSrc.loop = true;
                 _rotateSoundSrc.spatialBlend = 1f;
-
-                _rotateSoundSrc.Play();
             }
         }
     }
