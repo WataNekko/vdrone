@@ -14,7 +14,7 @@ namespace Robotics
         private Dictionary<object, List<Coroutine>> _interrupts = new Dictionary<object, List<Coroutine>>();
 
         /// <summary>
-        /// Attaches an interrupt service routine to this <see cref="Controller"/>.
+        /// Attaches a pseudo interrupt service routine to this <see cref="Controller"/>.
         /// Every update, <paramref name="interrupt"/> is passed into <paramref name="condition"/> to be polled. If <paramref name="condition"/> returns true, <paramref name="ISR"/> is called.
         /// </summary>
         /// <seealso cref="detachInterrupt"/>
