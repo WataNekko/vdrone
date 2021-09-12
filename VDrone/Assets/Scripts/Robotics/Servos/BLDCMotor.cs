@@ -89,7 +89,10 @@ namespace Robotics.Servos
                 _rigidbody.AddForceAtPosition(rotorUp * (speed * _forceAmount), _rotorTransform.position);
             }
 
+            if (_rotateSoundSrc != null)
+            {
 
+            }
         }
 
         /// <summary>
