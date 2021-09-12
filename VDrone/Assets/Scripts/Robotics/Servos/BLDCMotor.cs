@@ -68,7 +68,7 @@ namespace Robotics.Servos
             }
 
             #region Calculate angular speed
-            float speed = MathUtil.MapClamped(readMicroseconds(), from: (MIN_PULSE_WIDTH, MAX_PULSE_WIDTH), to: (0f, _maxSpeed));
+            float speed = MathUtil.MapClamped(readMicroseconds(), MIN_PULSE_WIDTH, MAX_PULSE_WIDTH, 0f, _maxSpeed);
             float currVel = (float)_direction * speed;
 
             float error = currVel - _prevVel;
