@@ -68,7 +68,8 @@ namespace Robotics.Servos
             }
 
             #region Calculate angular speed
-            float speed = MathUtil.MapClamped(readMicroseconds(), MIN_PULSE_WIDTH, MAX_PULSE_WIDTH, 0f, _maxSpeed);
+            float throttle = Mathf.InverseLerp(MIN_PULSE_WIDTH, MAX_PULSE_WIDTH, readMicroseconds());
+            float speed = Mathf.Lerp(0f, _maxSpeed, throttle);
             float currVel = (float)_direction * speed;
 
             float error = currVel - _prevVel;
@@ -78,8 +79,18 @@ namespace Robotics.Servos
             // Rotates rotor
             _rotorTransform.Rotate(Vector3.up * (currVel * Time.deltaTime));
 
-            // Applies reaction torque and force on rigidbody
             if (_rigidbody != null)
+            {
+                ApplyReactionTorqueAndForce();
+            }
+
+            if (_rotateSoundSrc != null && _rotateSoundSrc.enabled)
+            {
+                UpdateMotorSound();
+            }
+
+            #region Motor's update functions
+            void ApplyReactionTorqueAndForce()
             {
                 Vector3 rotorUp = _rotorTransform.up;
                 float acceleration = error * 100f;
@@ -89,10 +100,21 @@ namespace Robotics.Servos
                 _rigidbody.AddForceAtPosition(rotorUp * (speed * _forceAmount), _rotorTransform.position);
             }
 
-            if (_rotateSoundSrc != null)
+            void UpdateMotorSound()
             {
+                _rotateSoundSrc.volume = Mathf.Lerp(0f, 1f, throttle);
+                _rotateSoundSrc.pitch = Mathf.Lerp(_rotatePitchRange.x, _rotatePitchRange.y, throttle);
 
+                if (throttle != 0 && !_rotateSoundSrc.isPlaying)
+                {
+                    _rotateSoundSrc.Play();
+                }
+                else if (throttle == 0 && _rotateSoundSrc.isPlaying)
+                {
+                    _rotateSoundSrc.Stop();
+                }
             }
+            #endregion
         }
 
         /// <summary>

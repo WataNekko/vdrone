@@ -545,7 +545,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 996499603842142020, guid: 68e2b887bba81064fba3215f6b07f176, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2587348383828856122, guid: 68e2b887bba81064fba3215f6b07f176, type: 3}
       propertyPath: m_ConnectedAnchor.y
@@ -553,7 +553,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2818383670280487432, guid: 68e2b887bba81064fba3215f6b07f176, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2840595777858371077, guid: 68e2b887bba81064fba3215f6b07f176, type: 3}
       propertyPath: m_ConnectedAnchor.y
@@ -601,7 +601,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5834490647776934833, guid: 68e2b887bba81064fba3215f6b07f176, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6864041861348908800, guid: 68e2b887bba81064fba3215f6b07f176, type: 3}
       propertyPath: _pulseWidth._value
