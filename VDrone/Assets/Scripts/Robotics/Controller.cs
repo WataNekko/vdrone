@@ -15,22 +15,22 @@ namespace Robotics
 
         /// <summary>
         /// Attaches a pseudo interrupt service routine to this <see cref="Controller"/>.
-        /// Every update, <paramref name="interrupt"/> is passed into <paramref name="condition"/> to be polled. If <paramref name="condition"/> returns true, <paramref name="ISR"/> is called.
+        /// Every update, <paramref name="interrupt"/> is passed into <paramref name="predicate"/> to be polled. If <paramref name="predicate"/> returns true, <paramref name="ISR"/> is called.
         /// </summary>
         /// <seealso cref="detachInterrupt"/>
         /// <typeparam name="T">Any type.</typeparam>
-        /// <param name="interrupt">The object of the interrupt to be passed into <paramref name="condition"/>.</param>
+        /// <param name="interrupt">The object of the interrupt to be passed into <paramref name="predicate"/>.</param>
         /// <param name="ISR">The ISR to call when the interrupt occurs. This function must take no parameters and return nothing.</param>
-        /// <param name="condition">Defines when the interrupt should be triggered.</param>
-        protected void attachInterrupt<T>(T interrupt, Action ISR, Func<T, bool> condition)
+        /// <param name="predicate">Defines when the interrupt should be triggered.</param>
+        protected void attachInterrupt<T>(T interrupt, Action ISR, Func<T, bool> predicate)
         {
             if (ISR is null)
             {
                 throw new ArgumentNullException(nameof(ISR), $"{nameof(ISR)} must not be null.");
             }
-            if (condition is null)
+            if (predicate is null)
             {
-                throw new ArgumentNullException(nameof(condition), $"{nameof(condition)} must not be null.");
+                throw new ArgumentNullException(nameof(predicate), $"{nameof(predicate)} must not be null.");
             }
 
             var routine = StartCoroutine(InterruptPolling());
@@ -47,7 +47,7 @@ namespace Robotics
             {
                 for (; ; )
                 {
-                    if (condition(interrupt))
+                    if (predicate(interrupt))
                     {
                         ISR();
                     }
@@ -74,7 +74,7 @@ namespace Robotics
             }
         }
 
-        protected static class InterruptCondition
+        protected static class InterruptPredicate
         {
             /// <summary>
             /// Gets a function that returns true when the value extracted from the input object changes, false otherwise.
