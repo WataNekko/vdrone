@@ -1,6 +1,7 @@
 using UnityEngine;
 using Util;
 using GD.MinMaxSlider;
+using System.Collections;
 
 namespace Robotics.Servos
 {
@@ -30,12 +31,18 @@ namespace Robotics.Servos
         private Rigidbody _rigidbody;
 
         [Header("Sounds")]
+        [SerializeField, Tooltip("The audio clip to play when the motor starts up.")]
+        private AudioClip _startUpSound;
+        [SerializeField, Tooltip("The audio clip to play when the motor is ready to spin.")]
+        private AudioClip _readySound;
         [SerializeField, Tooltip("The audio clip to play when the motor rotates.")]
         private AudioClip _rotateSound;
         [SerializeField, MinMaxSlider(-3, 3)]
         private Vector2 _rotatePitchRange = Vector2.one;
 
-        private AudioSource _rotateSoundSrc;
+        private AudioSource _audio;
+        private bool _isReady = false;
+        private Coroutine _startUpRoutine;
 
         /// <summary>
         /// Field storing the previous angular speed with direction of the rotor.
@@ -58,11 +65,71 @@ namespace Robotics.Servos
         }
 
         /// <summary>
+        /// Initializes audio source, plays start up sounds and sets ready flag to true on enable.
+        /// </summary>
+        protected virtual void OnEnable()
+        {
+            if (_rotorTransform != null)
+            {
+                if (_audio == null)
+                {
+                    // Places audio source on the rotor.
+                    _audio = _rotorTransform.gameObject.AddComponent<AudioSource>();
+                    _audio.playOnAwake = false;
+                    _audio.spatialBlend = 1f;
+                }
+
+                // Plays sounds and sets flag
+                _startUpRoutine = StartCoroutine(MotorStartUp());
+            }
+
+            IEnumerator MotorStartUp()
+            {
+                _audio.loop = false;
+                _audio.volume = _audio.pitch = 1f;
+
+                _audio.clip = _startUpSound;
+                _audio.Play();
+
+                yield return new WaitForSeconds(GetClipLength(_startUpSound) + 1f);
+                yield return new WaitUntil(() => readMicroseconds() <= MIN_PULSE_WIDTH);
+
+                _audio.clip = _readySound;
+                _audio.Play();
+
+                yield return new WaitForSeconds(GetClipLength(_readySound) + 0.5f);
+
+                _audio.clip = _rotateSound;
+                _audio.loop = _isReady = true;
+
+                _startUpRoutine = null;
+
+                float GetClipLength(AudioClip clip) => clip != null ? clip.length : 0f;
+            }
+        }
+
+        /// <summary>
+        /// Sets ready flag to false and stops sounds on disable.
+        /// </summary>
+        protected virtual void OnDisable()
+        {
+            if (_startUpRoutine != null)
+            {
+                StopCoroutine(_startUpRoutine);
+            }
+            if (_audio != null)
+            {
+                _audio.Stop();
+            }
+            _isReady = false;
+        }
+
+        /// <summary>
         /// Updates motor's rotation and physics.
         /// </summary>
         protected virtual void FixedUpdate()
         {
-            if (_rotorTransform == null)
+            if (_rotorTransform == null || !_isReady)
             {
                 return;
             }
@@ -84,7 +151,7 @@ namespace Robotics.Servos
                 ApplyReactionTorqueAndForce();
             }
 
-            if (_rotateSoundSrc != null && _rotateSoundSrc.enabled)
+            if (_audio != null && _audio.enabled)
             {
                 UpdateMotorSound();
             }
@@ -102,34 +169,19 @@ namespace Robotics.Servos
 
             void UpdateMotorSound()
             {
-                _rotateSoundSrc.volume = Mathf.Lerp(0f, 1f, throttle);
-                _rotateSoundSrc.pitch = Mathf.Lerp(_rotatePitchRange.x, _rotatePitchRange.y, throttle);
+                _audio.volume = Mathf.Lerp(0f, 1f, throttle);
+                _audio.pitch = Mathf.Lerp(_rotatePitchRange.x, _rotatePitchRange.y, throttle);
 
-                if (throttle != 0 && !_rotateSoundSrc.isPlaying)
+                if (throttle != 0 && !_audio.isPlaying)
                 {
-                    _rotateSoundSrc.Play();
+                    _audio.Play();
                 }
-                else if (throttle == 0 && _rotateSoundSrc.isPlaying)
+                else if (throttle == 0 && _audio.isPlaying)
                 {
-                    _rotateSoundSrc.Stop();
+                    _audio.Stop();
                 }
             }
             #endregion
-        }
-
-        /// <summary>
-        /// Initialize audio source on enable.
-        /// </summary>
-        protected virtual void OnEnable()
-        {
-            if (_rotorTransform != null && _rotateSoundSrc == null)
-            {
-                // Places audio source on the rotor.
-                _rotateSoundSrc = _rotorTransform.gameObject.AddComponent<AudioSource>();
-                _rotateSoundSrc.clip = _rotateSound;
-                _rotateSoundSrc.loop = true;
-                _rotateSoundSrc.spatialBlend = 1f;
-            }
         }
     }
 }
