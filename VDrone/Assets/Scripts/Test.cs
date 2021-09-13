@@ -25,17 +25,5 @@ public class Test : MonoBehaviour
             rb.AddRelativeTorque(TorqueImpulse, ForceMode.Impulse);
             ApplyImpulse = false;
         }
-        if (joint != null)
-        {
-            //AngVel = Tf.InverseTransformDirection(rb.angularVelocity);
-            AngVel = joint.currentTorque;
-            //Ang = AngVel.magnitude;
-            Ang = rb.solverIterations;
-        }
     }
-
-    public ConfigurableJoint joint;
-    public Vector3 AngVel;
-    public float Ang;
-    public Transform Tf;
 }
