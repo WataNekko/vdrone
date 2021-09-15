@@ -127,5 +127,20 @@ namespace Robotics
                 };
             }
         }
+
+        /// <summary>
+        /// Gets the component in the child object based on the given children indices.
+        /// </summary>
+        /// <param name="childrenIndices">A list of indices to get to the child object.</param>
+        /// <returns>The component in the child object based on the given children indices.</returns>
+        protected T GetComponent<T>(params int[] childrenIndices)
+        {
+            Transform tf = transform;
+            foreach (int index in childrenIndices)
+            {
+                tf = tf.GetChild(index);
+            }
+            return tf.GetComponent<T>();
+        }
     }
 }

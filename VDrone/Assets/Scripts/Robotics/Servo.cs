@@ -33,6 +33,11 @@ namespace Robotics
         /// <param name="max">Max pulse width.</param>
         public static void attach(out Servo var, Servo servo, int min, int max)
         {
+            if (servo == null)
+            {
+                throw new System.ArgumentNullException(nameof(servo), "Servo to be attached must not be null.");
+            }
+
             var = servo;
             servo._pulseWidth.Range = (min, max);
         }
