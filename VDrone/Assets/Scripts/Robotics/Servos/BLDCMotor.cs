@@ -5,6 +5,12 @@ using System.Collections;
 
 namespace Robotics.Servos
 {
+    /// <summary>
+    /// Represents a BLDC motor.
+    /// </summary>
+    /// <remarks>
+    /// The motor starts up on enable. On start up, the pulse width must be at the minimum value (1000) before the motor enters ready mode and can then spin according to the pulse width.
+    /// </remarks>
     public class BLDCMotor : Servo
     {
         private enum RotationDirection : sbyte
